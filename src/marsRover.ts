@@ -49,22 +49,29 @@ export class Rover {
   }
 
   move () :void {
-    switch(this.facing) {
+    this.coordinates = this.getNextDestination();
+  }
+
+  getNextDestination() :Coordinates {
+    const destination = {...this.coordinates};
+    switch (this.facing) {
       case 'N':
-        this.coordinates.y++;
+        destination.y++;
         break;
       case 'E':
-        this.coordinates.x++;
+        destination.x++;
         break;
       case 'S':
-        this.coordinates.y--;
-        break
+        destination.y--;
+        break;
       case 'W':
-        this.coordinates.x--;
+        destination.x--;
       default:
-        // shouldn't ever get here
+      // shouldn't ever get here
     }
+    return destination;
   }
+
 }
 
 

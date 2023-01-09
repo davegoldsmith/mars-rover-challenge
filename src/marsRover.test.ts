@@ -65,3 +65,26 @@ describe("Test Rover move", () => {
     expect(rover.coordinates).toEqual({x:0, y:0});
   });  
 });
+
+describe("Test Rover getDestination", () => {
+  const rover = new Rover({x:0, y:0}, 'N', 'Rover4');
+
+  test("move returns 0, 1 when pointed North", () => {
+    expect(rover.getNextDestination()).toEqual({x:0, y:1});
+    rover.move();
+  });
+  test("move returns 1, 1 when pointed East", () => {
+    rover.rotateRight(); // now pointing East
+    expect(rover.getNextDestination()).toEqual({x:1, y:1});
+    rover.move();
+  });
+  test("move returns 1, 0 when pointed South", () => {
+    rover.rotateRight(); // now pointing East    
+    expect(rover.getNextDestination()).toEqual({x:1, y:0});
+    rover.move();
+  });
+  test("move returns 0, 0 when pointed West", () => {
+    rover.rotateRight(); // now pointing East
+    expect(rover.getNextDestination()).toEqual({x:0, y:0});
+  });  
+});
