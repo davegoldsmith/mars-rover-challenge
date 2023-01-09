@@ -41,3 +41,27 @@ describe("Test Rover right rotation", () => {
     expect(rover2.facing).toEqual("N");
   });
 });
+
+describe("Test Rover move", () => {
+  const rover = new Rover({x:0, y:0}, 'N', 'Rover3');
+
+  test("move returns 0, 1 when pointed North", () => {
+    rover.move();
+    expect(rover.coordinates).toEqual({x:0, y:1});
+  });
+  test("move returns 1, 1 when pointed East", () => {
+    rover.rotateRight(); // now pointing East
+    rover.move();
+    expect(rover.coordinates).toEqual({x:1, y:1});
+  });
+  test("move returns 1, 0 when pointed South", () => {
+    rover.rotateRight(); // now pointing East
+    rover.move();
+    expect(rover.coordinates).toEqual({x:1, y:0});
+  });
+  test("move returns 0, 0 when pointed West", () => {
+    rover.rotateRight(); // now pointing East
+    rover.move();
+    expect(rover.coordinates).toEqual({x:0, y:0});
+  });  
+});

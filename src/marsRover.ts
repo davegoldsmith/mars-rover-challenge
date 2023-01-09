@@ -47,6 +47,24 @@ export class Rover {
       this.facing =  directionPair[1] as CardinalPoint;
     }
   }
+
+  move () :void {
+    switch(this.facing) {
+      case 'N':
+        this.coordinates.y++;
+        break;
+      case 'E':
+        this.coordinates.x++;
+        break;
+      case 'S':
+        this.coordinates.y--;
+        break
+      case 'W':
+        this.coordinates.x--;
+      default:
+        // shouldn't ever get here
+    }
+  }
 }
 
 
