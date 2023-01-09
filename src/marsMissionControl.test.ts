@@ -1,4 +1,6 @@
-import { createRover, Rover } from "../src/marsMissionControl";
+import { createRover } from "../src/marsMissionControl";
+import { Rover } from "../src/marsRover";
+
 describe("test addRover function", () => {
   const rover1 = new Rover({x:0, y:0}, 'N', 'Rover1');
   it("should return a new rover object", () => {
