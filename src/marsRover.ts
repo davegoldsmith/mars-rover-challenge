@@ -1,8 +1,6 @@
 import { Coordinates, CardinalPoint } from "../src/marsMission.types";
 
 let roverCounter = 0;
-const rotateLeftMap =[ ['N','W'], ['W','S'], ['S','E'],['E','N']];
-const rotateRightMap =[ ['N','E'], ['E','S'], ['S','W'],['W','N']];
 
 interface RoverInterface {
   id: string;
@@ -15,6 +13,19 @@ export class Rover {
   coordinates: Coordinates;
   facing: CardinalPoint;
 
+  private static rotateLeftMap = new Map([
+    ["N", "W"],
+    ["W", "S"],
+    ["S", "E"],
+    ["E", "N"],
+  ]);
+  private static rotateRightMap = new Map([
+    ["N", "E"],
+    ["E", "S"],
+    ["S", "W"],
+    ["W", "N"],
+  ]);
+
   constructor(coordinates: Coordinates, facing: CardinalPoint, id?: string) {
     if (typeof id === "undefined") {
       this.id = `Rover${++roverCounter}`;
@@ -25,53 +36,53 @@ export class Rover {
     this.facing = facing;
   }
 
-  rotateLeft () :void {
-    this.rotate('L');
+  rotateLeft(): void {
+    this.rotate("L");
   }
 
-  rotateRight () :void {
-    this.rotate('R');
+  rotateRight(): void {
+    this.rotate("R");
   }
 
-  rotate (direction: 'L' | 'R') :void {
+  rotate(direction: "L" | "R"): void {
     let map;
-    if (direction === 'L') {
-      map = rotateLeftMap;
+    if (direction === "L") {
+      map = Rover.rotateLeftMap;
     } else {
-      map = rotateRightMap;
+      map = Rover.rotateRightMap;
     }
 
-    const directionPair = map.find((rotation) => rotation[0] === this.facing);
-
-    if (typeof directionPair !== "undefined") {
-      this.facing =  directionPair[1] as CardinalPoint;
-    }
+    this.facing = map.get(this.facing) as CardinalPoint;
   }
 
-  move () :void {
+  move(): void {
     this.coordinates = this.getNextDestination();
   }
 
-  getNextDestination() :Coordinates {
-    const destination = {...this.coordinates};
+  getNextDestination(): Coordinates {
+    const destination = { ...this.coordinates };
     switch (this.facing) {
-      case 'N':
+      case "N":
         destination.y++;
         break;
-      case 'E':
+      case "E":
         destination.x++;
         break;
-      case 'S':
+      case "S":
         destination.y--;
         break;
-      case 'W':
+      case "W":
         destination.x--;
       default:
       // shouldn't ever get here
     }
     return destination;
   }
-
 }
-
-
+export const createRover = (
+  coordinates: Coordinates,
+  facing: CardinalPoint
+): Rover => {
+  const rover = new Rover(coordinates, facing);
+  return rover;
+};

@@ -6,6 +6,6 @@ export const initialisePlateau = (coordinates: Coordinates) => {
   maxCoordinates = coordinates;
 };
 
-export const isInBounds = (coordinates: Coordinates): boolean => {
+export const isInPlateauBoundaries = (coordinates: Coordinates): boolean => {
   return coordinates.x <= maxCoordinates.x && coordinates.y <= maxCoordinates.x;
 };

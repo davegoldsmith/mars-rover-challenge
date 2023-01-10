@@ -1,4 +1,4 @@
-import{Rover} from "../src/marsRover";
+import{Rover, createRover} from "../src/marsRover";
 
 describe("Test Rover left rotation", () => {
   const rover = new Rover({x:0, y:0}, 'N', 'Rover1');
@@ -87,4 +87,11 @@ describe("Test Rover getDestination", () => {
     rover.rotateRight(); // now pointing East
     expect(rover.getNextDestination()).toEqual({x:0, y:0});
   });  
+});
+
+describe("test createRover function", () => {
+  const rover1 = new Rover({x:0, y:0}, 'N', 'Rover1');
+  it("should return a new rover object", () => {
+    expect(createRover({x:0, y:0}, 'N')).toEqual(rover1);
+  });
 });
