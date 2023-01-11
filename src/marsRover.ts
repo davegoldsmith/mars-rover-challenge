@@ -2,12 +2,6 @@ import { Coordinates, CardinalPoint } from "../src/marsMission.types";
 
 let roverCounter = 0;
 
-interface RoverInterface {
-  id: string;
-  coordinates: Coordinates;
-  facing: CardinalPoint;
-}
-
 export class Rover {
   id: string;
   coordinates: Coordinates;
@@ -44,7 +38,7 @@ export class Rover {
     this.rotate("R");
   }
 
-  rotate(direction: "L" | "R"): void {
+  private rotate(direction: "L" | "R"): void {
     let map;
     if (direction === "L") {
       map = Rover.rotateLeftMap;

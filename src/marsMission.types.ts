@@ -4,6 +4,7 @@ export type InstructionType = "L" | "M" | "R";
 export interface Coordinates {
   x: number;
   y: number;
+  facing?: CardinalPoint;
 }
 
 export interface DirectionCoordinates {
@@ -14,4 +15,9 @@ export interface DirectionCoordinates {
 export interface RoverInstructions {
   startCoordinates: DirectionCoordinates;
   instructions: string;
+}
+
+export interface missionCommand {
+  plateauCoordinates: Coordinates;
+  [index: number]: RoverInstructions;
 }
