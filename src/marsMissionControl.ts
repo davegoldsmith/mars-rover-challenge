@@ -3,6 +3,7 @@ import {
   Coordinates,
   DirectionCoordinates,
   InstructionType,
+  MissionCommands,
   RoverInstructions,
 } from "../src/marsMission.types";
 import { initialisePlateau, isInPlateauBoundaries } from "../src/marsPlateau";
@@ -13,22 +14,17 @@ import { initialisePlateau, isInPlateauBoundaries } from "../src/marsPlateau";
  * @param roverInstructions array of rover startpoint/instructions
  * @returns array of rover final positions (x/y coordinates and facing direction)
  */
-export const launchMission = (
-  plateauMaxCoordinates: Coordinates,
-  ...roverInstructions: Array<RoverInstructions>
-): Array<DirectionCoordinates> => {
+export const launchMission = (missionCommands: MissionCommands): Array<DirectionCoordinates> => {
   const rovers: Array<Rover> = [];
   const results = new Array<DirectionCoordinates>();
-  initialisePlateau(plateauMaxCoordinates);
-  roverInstructions.forEach((roverInstruction) => {
+  initialisePlateau(missionCommands.plateauCoordinates);
+  missionCommands.roverInstructionsArray.forEach((roverInstruction) => {
     const rover = createRover(
       roverInstruction.startCoordinates.coordinates,
       roverInstruction.startCoordinates.facing
     );
     rovers.push(rover);
-    const instructionsArray = roverInstruction.instructions.split(
-      ""
-    ) as Array<InstructionType>;
+    const instructionsArray = roverInstruction.instructions.split("") as Array<InstructionType>;
     for (const instruction of instructionsArray) {
       if (instruction === "L") {
         rover.rotateLeft();
@@ -48,16 +44,6 @@ export const launchMission = (
         } else {
           rover.move();
         }
-        // const found = rovers.find((otherRover) => {
-        //   let found = false;
-        //   if (otherRover.id !== rover.id) {
-        //     if(otherRover.coordinates.x === nextDestination.x && otherRover.coordinates.y === nextDestination.y) {
-        //       found = true;
-        //     }
-        //   }
-        //   return found;          
-        // });
-
       }
     }
     results.push({ coordinates: rover.coordinates, facing: rover.facing });

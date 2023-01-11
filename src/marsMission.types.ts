@@ -17,7 +17,7 @@ export interface RoverInstructions {
   instructions: string;
 }
 
-export interface missionCommand {
+export interface MissionCommands {
   plateauCoordinates: Coordinates;
-  [index: number]: RoverInstructions;
+  roverInstructionsArray: RoverInstructions[];
 }
