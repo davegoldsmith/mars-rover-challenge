@@ -1,12 +1,19 @@
-import { Coordinates, CardinalPoint } from "../src/marsMission.types";
+import { Coordinates, CompassPoint } from "../src/marsMission.types";
 
 let roverCounter = 0;
 
+/**
+ * Class to encapsulate the behaviour for the Mars Rover object
+ * 
+ */
 export class Rover {
   id: string;
   coordinates: Coordinates;
-  facing: CardinalPoint;
+  facing: CompassPoint;
 
+  /**
+   * 
+   */
   private static rotateLeftMap = new Map([
     ["N", "W"],
     ["W", "S"],
@@ -20,7 +27,13 @@ export class Rover {
     ["W", "N"],
   ]);
 
-  constructor(coordinates: Coordinates, facing: CardinalPoint, id?: string) {
+  /**
+   * Mars Rover constructor
+   * @param coordinates - x/y 
+   * @param facing 
+   * @param id 
+   */
+  constructor(coordinates: Coordinates, facing: CompassPoint, id?: string) {
     if (typeof id === "undefined") {
       this.id = `Rover${++roverCounter}`;
     } else {
@@ -46,7 +59,7 @@ export class Rover {
       map = Rover.rotateRightMap;
     }
 
-    this.facing = map.get(this.facing) as CardinalPoint;
+    this.facing = map.get(this.facing) as CompassPoint;
   }
 
   move(): void {
@@ -75,7 +88,7 @@ export class Rover {
 }
 export const createRover = (
   coordinates: Coordinates,
-  facing: CardinalPoint
+  facing: CompassPoint
 ): Rover => {
   const rover = new Rover(coordinates, facing);
   return rover;

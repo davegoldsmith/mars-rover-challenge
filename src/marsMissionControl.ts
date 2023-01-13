@@ -6,18 +6,19 @@ import {
   MissionCommands,
   RoverInstructions,
 } from "../src/marsMission.types";
-import { initialisePlateau, isInPlateauBoundaries } from "../src/marsPlateau";
+import { validatePlateau, isInPlateauBoundaries } from "../src/marsPlateau";
 
 /**
- * Launch Mars Mission
- * @param plateauMaxCoordinates maximum x/y coordinates for plateau
- * @param roverInstructions array of rover startpoint/instructions
- * @returns array of rover final positions (x/y coordinates and facing direction)
+ * Launch Mars Mission with the given missionCommand - creates a mars plateau
+ * and validates it and then issues the commands for each rover provided
+ * 
+ * @param {MissionCommands} missionCommands - mission commands to run the mission
+ * @returns array of finish positions for the mission's rovers
  */
 export const launchMission = (missionCommands: MissionCommands): Array<DirectionCoordinates> => {
   const rovers: Array<Rover> = [];
   const results = new Array<DirectionCoordinates>();
-  initialisePlateau(missionCommands.plateauCoordinates);
+  validatePlateau(missionCommands.plateau);
   missionCommands.roverInstructionsArray.forEach((roverInstruction) => {
     const rover = createRover(
       roverInstruction.startCoordinates.coordinates,
@@ -32,7 +33,7 @@ export const launchMission = (missionCommands: MissionCommands): Array<Direction
         rover.rotateRight();
       } else {
         const nextDestination = rover.getNextDestination();
-        if (isInPlateauBoundaries(nextDestination) !== true) {
+        if (isInPlateauBoundaries(nextDestination, missionCommands.plateau) !== true) {
           throw new Error(
             `Error: Coordinates x=${nextDestination.x}, y=${nextDestination.y} is outside the Plateau's boundary.`
           );
@@ -40,7 +41,6 @@ export const launchMission = (missionCommands: MissionCommands): Array<Direction
           throw new Error(
             `Error: Coordinates x=${nextDestination.x}, y=${nextDestination.y} is blocked by another rover.`
           );
-
         } else {
           rover.move();
         }

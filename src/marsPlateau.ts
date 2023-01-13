@@ -1,23 +1,32 @@
-import { Coordinates } from "../src/marsMission.types";
+import { Coordinates, MarsPlateau } from "../src/marsMission.types";
 
-let maxCoordinates = { x: 0, y: 0 };
-
-export const initialisePlateau = (coordinates: Coordinates) => {
-  if (coordinates.x < 0 || coordinates.y < 0) {
-    throw new Error("Error: x and y coordinates have to be positive");
+/**
+ * Check that the given plateau object is valid
+ * 
+ * @param {MarsPlateau} plateau - mars plateau to validate
+ */
+export const validatePlateau = (plateau: MarsPlateau) :boolean => {
+  if (plateau.coordinates.x < 0 || plateau.coordinates.y < 0) {
+    throw new Error("Error: Mars Plateau x and y coordinates have to be positive");
   }
-  maxCoordinates = coordinates;
+  return true;
 };
 
-export const isInPlateauBoundaries = (coordinates: Coordinates): boolean => {
-  let isInBounds = true;
-  if (
-    coordinates.x < 0 ||
-    coordinates.y < 0 ||
-    coordinates.x > maxCoordinates.x ||
-    coordinates.y > maxCoordinates.y
-  ) {
-    isInBounds = false;
-  }
-  return isInBounds;
+/**
+ * Checks to see if the given coordinates are within the boundaries of the given plateau
+ * 
+ * @param {Coordinate} checkCoordinates - coordinates to check
+ * @param {MarsPlateau} plateau - plateau to check 
+ * @returns true if the given coordinates are within the boundaries of the given plateau otherwise false
+ */
+export const isInPlateauBoundaries = (
+  checkCoordinates: Coordinates,
+  plateau: MarsPlateau
+): boolean => {
+  return (
+    checkCoordinates.x >= 0 &&
+    checkCoordinates.y >= 0 &&
+    checkCoordinates.x <= plateau.coordinates.x &&
+    checkCoordinates.y <= plateau.coordinates.y
+  );
 };
