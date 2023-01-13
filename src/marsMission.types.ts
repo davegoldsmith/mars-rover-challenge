@@ -27,7 +27,7 @@ export interface MarsPlateau {
 }
 
 /**
- * 
+ * Direction coordinates, x and y coordinates and facing direction
  */
 export interface DirectionCoordinates {
   coordinates: Coordinates;
