@@ -86,7 +86,29 @@ If you type invalid responses then a warning is shown and the question is asked 
 
 ##### Enter mission from file
 
-Type in a valid file that contains valid mission commands.
+Type in a valid file that contains valid mission commands. The mission commands should look like this:
+
+``` json
+{
+  "plateau": { "coordinates": { "x": 22, "y": 22 } },
+  "roverInstructionsArray": [
+    {
+      "startCoordinates": {
+        "coordinates": { "x": 1, "y": 1 },
+        "facing": "N"
+      },
+      "instructions": "MM"
+    },
+    {
+      "startCoordinates": {
+        "coordinates": { "x": 2, "y": 2 },
+        "facing": "E"
+      },
+      "instructions": "MM"
+    }
+  ]
+}
+```
 
 ![Welcome to Mission Control](./images/file-mission.jpg)
 
