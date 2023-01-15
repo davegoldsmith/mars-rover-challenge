@@ -15,7 +15,8 @@ import {
   print,
   printHeader,
   printLine,
-  validateIsCompassPoint,
+  readMissionFromFile,
+  validateIsCompassPoint,  
   validateIsNumber,
   validateRoverInstructions
 } from "./console";
@@ -68,7 +69,6 @@ const askMissionParameters = (name: string): void => {
  * Handles the response from the user to determine
  * how mission parameters will be provided
  * @param commandType command option typed in
- * @returns
  */
 const handleCommandType = (commandType: string) => {
   switch (commandType) {
@@ -76,12 +76,37 @@ const handleCommandType = (commandType: string) => {
       enterMissionParameters();
       break;
     case "2":
-    //return enterFile();
+      enterFile();
+      break;
     case "0":
     default:
       endMission(false);
   }
 };
+
+/**
+ * Get the mission parameters from a file
+ */
+const enterFile = (): void => {
+  clear(true);
+  askQuestion("Enter the file location of the mission commands: ", handleFileLoading);
+};
+
+/**
+ * Handles loading a mission from a given file name, if the file
+ * does not exist or does not contain valid mission commands
+ * then the mission ends with failure
+ * 
+ * @param fileName - name of file containing mission commands
+ */
+const handleFileLoading = (fileName: string) => {
+  try {
+    const mission = readMissionFromFile(fileName);
+    orchestrateMission(mission);    
+  } catch(error) {
+    endMission(false, `❌ Unable to load valid mission commands from file: '${fileName}'`);
+  } 
+}
 
 /**
  * Handles all the questions that need to be asked in order to*
@@ -97,6 +122,16 @@ const enterMissionParameters = async () => {
   const roversCommands = await askRoverCommandQuestions();
   // construct the mission object from the inputs
   const mission = {plateau: marsPlateau, roverInstructionsArray: roversCommands} as MissionCommands;
+  // orchestrate mission based on all the data entered by the user
+  orchestrateMission(mission);
+};
+
+/**
+ * Launches mission based on the given mission commands
+ * 
+ * @param mission - the mission commands
+ */
+const orchestrateMission = (mission: MissionCommands) :void => {
   try {
     const result = launchMission(mission);
     let message = '';
@@ -106,8 +141,8 @@ const enterMissionParameters = async () => {
     endMission(true, message);
   } catch(error) {
     endMission(false, `❌ ${(error as Error).message}`);
-  }
-};
+  } 
+}
 
 /**
  * Ask questions to determine the plateau boundaries

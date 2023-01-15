@@ -1,5 +1,6 @@
 import * as readline from "node:readline";
-import { CompassPoint } from "./src/marsMission.types";
+import { readFileSync } from "node:fs";
+import { CompassPoint, MissionCommands } from "./src/marsMission.types";
 
 /**
  * Creates input reader
@@ -107,6 +108,12 @@ export const askValidatedQuestion = async (question: string, validateFunction: F
     }
   }
 };
+
+export const readMissionFromFile = (fileName : string) :MissionCommands => {
+  const data = readFileSync(fileName, 'utf-8');
+  const missionCommands = JSON.parse(data);
+  return missionCommands;
+}
 
 /**********************************************************************
  * 
