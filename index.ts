@@ -1,4 +1,18 @@
-import { askQuestion, clear, print, printLine} from "./console";
+import {
+  CompassPoint,
+  DirectionCoordinates,
+  MarsPlateau,
+  MissionCommands,
+  RoverInstructions,
+} from "./src/marsMission.types";
+import {
+  askQuestion,
+  askValidatedQuestion,
+  clear,
+  print,
+  printLine,
+  validateIsNumber,
+} from "./console";
 
 /**
  * Mission control welcome page: enter your name
@@ -15,14 +29,17 @@ function welcomeMissionController(): void {
 /**
  * Checks you entered a name at the welcome page. Launches
  * the mission if a name is given
- * 
+ *
  * @param name Cadet's name
  */
 const startMission = (name: string): void => {
   if (name && name.length > 0) {
     askMissionParameters(name);
   } else {
-    endMission(false, "🛑 Sorry, unable to verify your Rover status without a name.\n   That means no Rovering for you!");
+    endMission(
+      false,
+      "🛑 Sorry, unable to verify your Rover status without a name.\n   That means no Rovering for you!"
+    );
   }
 };
 
@@ -50,21 +67,53 @@ const askMissionParameters = (name: string): void => {
  * Handles the response from the user to determine
  * how mission parameters will be provided
  * @param commandType command option typed in
- * @returns 
+ * @returns
  */
 const handleCommandType = (commandType: string) => {
   switch (commandType) {
     case "1":
-      //return enterMissionParameters();
+      enterMissionParameters();
+      break;
     case "2":
-      //return enterFile();
+    //return enterFile();
     case "0":
     default:
-      return endMission(false);
+      endMission(false);
   }
 };
 
+/**
+ * Handles all the questions that need to be asked in order to*
+ * run the mission, async so that multiple questions can be
+ * asked (looping the same questions for each Rover assigned
+ * to the mission)
+ */
+const enterMissionParameters = async () => {
+  clear(true);
+  // ask the user questions to determine the plateau boundaries
+  // and each rover's instruction set
+  const marsPlateau = await askPlateauQuestions();
+  endMission(true);
+};
 
+/**
+ * Ask questions to determine the plateau boundaries
+ * @returns resolved Promise (plateau object)
+ */
+const askPlateauQuestions = async () => {
+  const header = "Enter information for the Mars Plateau 👇";
+  clear(false);
+  printLine("-", header.length);
+  print(header);
+  printLine("-", header.length);
+
+  const xcoord = await askValidatedQuestion("Enter plateau maximum x coordinate: ", validateIsNumber) as string;
+  const ycoord = await askValidatedQuestion("Enter plateau maximum y coordinate: ", validateIsNumber) as string;
+
+  return {
+    coordinates: { x: parseInt(xcoord), y: parseInt(ycoord) },
+  } as MarsPlateau;
+};
 
 /**
  * Page that show's if the mission was a success or not, if
@@ -90,4 +139,3 @@ const endMission = (success: boolean, message?: string): void => {
 };
 
 welcomeMissionController();
-
