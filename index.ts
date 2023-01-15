@@ -195,13 +195,13 @@ const askRoverQuestions = async(roverNum: number) => {
   clear(false);
   printHeader(`Enter details for ${roverName} 👇`);
   
-  const xcoord: number = await askValidatedQuestion(`Enter starting x coordinate for ${roverName}: `, validateIsNumber) as number;
-  const ycoord: number = await askValidatedQuestion(`Enter starting y coordinate for ${roverName}: `, validateIsNumber) as number;
+  const xcoord = await askValidatedQuestion(`Enter starting x coordinate for ${roverName}: `, validateIsNumber) as string;
+  const ycoord = await askValidatedQuestion(`Enter starting y coordinate for ${roverName}: `, validateIsNumber) as string;
   const facingDir: CompassPoint = await askValidatedQuestion(`Enter initial direction that ${roverName} is facing: `, validateIsCompassPoint) as CompassPoint;
   const instructions: string = await askValidatedQuestion(`Enter instructions for ${roverName}: `, validateRoverInstructions) as string;
 
   const roverOneInstructions = {
-    startCoordinates: { coordinates: { x: xcoord, y: ycoord }, facing: facingDir },
+    startCoordinates: { coordinates: { x: parseInt(xcoord), y: parseInt(ycoord) }, facing: facingDir },
     instructions: instructions,
   } as RoverInstructions;
   

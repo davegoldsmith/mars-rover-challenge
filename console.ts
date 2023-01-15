@@ -93,10 +93,11 @@ export const getQuestionAsync = async (question: string) => {
 };
 
 /**
+ * Ask a question and vaildate response
  * 
  * @param question - question to ask
  * @param validateFunction - function to handle validation of the response
- * @returns 
+ * @returns true if valid otherwise false
  */
 export const askValidatedQuestion = async (question: string, validateFunction: Function) => {
   let isValid = false;
@@ -109,6 +110,12 @@ export const askValidatedQuestion = async (question: string, validateFunction: F
   }
 };
 
+/**
+ * Read mission commands from a file 
+ * 
+ * @param fileName - name of file that contains mission commands
+ * @returns mission commands object
+ */
 export const readMissionFromFile = (fileName : string) :MissionCommands => {
   const data = readFileSync(fileName, 'utf-8');
   const missionCommands = JSON.parse(data);
