@@ -6,12 +6,18 @@ import {
   RoverInstructions,
 } from "./src/marsMission.types";
 import {
+  launchMission
+} from "./src/marsMissionControl";
+import {
   askQuestion,
   askValidatedQuestion,
   clear,
   print,
+  printHeader,
   printLine,
+  validateIsCompassPoint,
   validateIsNumber,
+  validateRoverInstructions
 } from "./console";
 
 /**
@@ -19,9 +25,7 @@ import {
  */
 function welcomeMissionController(): void {
   clear(false);
-  print("------------------------------------------");
-  print("| 🚀 Welcome to Mars Mission Control 🚀 |");
-  print("------------------------------------------");
+  printHeader("| 🚀 Welcome to Mars Mission Control 🚀 |");
 
   askQuestion(`What's your name space cadet? `, startMission);
 }
@@ -52,10 +56,7 @@ const startMission = (name: string): void => {
  */
 const askMissionParameters = (name: string): void => {
   clear(false);
-  const header = `| 🚀 Welcome space cadet ${name}! 🚀 |`;
-  printLine("-", header.length);
-  print(header);
-  printLine("-", header.length);
+  printHeader(`| 🚀 Welcome space cadet ${name}! 🚀 |`);
   print("Please enter : ");
   print("  1: Enter direct commands", false);
   print("  2: Enter commands from a file", false);
@@ -93,7 +94,19 @@ const enterMissionParameters = async () => {
   // ask the user questions to determine the plateau boundaries
   // and each rover's instruction set
   const marsPlateau = await askPlateauQuestions();
-  endMission(true);
+  const roversCommands = await askRoverCommandQuestions();
+  // construct the mission object from the inputs
+  const mission = {plateau: marsPlateau, roverInstructionsArray: roversCommands} as MissionCommands;
+  try {
+    const result = launchMission(mission);
+    let message = '';
+    result.forEach((roverEndPosition: DirectionCoordinates, index: number) => {
+      message += `\n🚔 Rover${index+1} finished at x=${roverEndPosition.coordinates.x}, y=${roverEndPosition.coordinates.y} facing ${roverEndPosition.facing} 🚔`
+    });
+    endMission(true, message);
+  } catch(error) {
+    endMission(false, `❌ ${(error as Error).message}`);
+  }
 };
 
 /**
@@ -101,11 +114,8 @@ const enterMissionParameters = async () => {
  * @returns resolved Promise (plateau object)
  */
 const askPlateauQuestions = async () => {
-  const header = "Enter information for the Mars Plateau 👇";
   clear(false);
-  printLine("-", header.length);
-  print(header);
-  printLine("-", header.length);
+  printHeader("Enter information for the Mars Plateau 👇");
 
   const xcoord = await askValidatedQuestion("Enter plateau maximum x coordinate: ", validateIsNumber) as string;
   const ycoord = await askValidatedQuestion("Enter plateau maximum y coordinate: ", validateIsNumber) as string;
@@ -116,6 +126,54 @@ const askPlateauQuestions = async () => {
 };
 
 /**
+ * Ask questions to determine each Rover's starting point and instrustion set
+ * @returns resolved Promise (array of rover instructions)
+ */
+const askRoverCommandQuestions = async () => {
+  const numRovers = await askValidatedQuestion("How many Rovers? ", validateIsNumber) as number;
+  return await loopRovers(numRovers);
+}
+
+/**
+ * Loops through questions for each rover
+ * @param roverNum number of rover instructions required
+ * @returns resolved Promise (array of rover instructions)
+ */
+const loopRovers = async(roverNum: number) => {
+  const roversInstructions = new Array<RoverInstructions>();
+
+  for (let i = 1; i <= roverNum; i++) {
+    const instructions = await askRoverQuestions(i);
+    roversInstructions.push(instructions);
+  }
+
+  return roversInstructions;
+};
+
+/**
+ * Asks the questions for a particular rover
+ * @param roverNum rover number
+ * @returns Resolved Promise (rover instructions)
+ */
+const askRoverQuestions = async(roverNum: number) => {  
+  const roverName = `Rover${roverNum}`;
+  clear(false);
+  printHeader(`Enter details for ${roverName} 👇`);
+  
+  const xcoord: number = await askValidatedQuestion(`Enter starting x coordinate for ${roverName}: `, validateIsNumber) as number;
+  const ycoord: number = await askValidatedQuestion(`Enter starting y coordinate for ${roverName}: `, validateIsNumber) as number;
+  const facingDir: CompassPoint = await askValidatedQuestion(`Enter initial direction that ${roverName} is facing: `, validateIsCompassPoint) as CompassPoint;
+  const instructions: string = await askValidatedQuestion(`Enter instructions for ${roverName}: `, validateRoverInstructions) as string;
+
+  const roverOneInstructions = {
+    startCoordinates: { coordinates: { x: xcoord, y: ycoord }, facing: facingDir },
+    instructions: instructions,
+  } as RoverInstructions;
+  
+  return roverOneInstructions;
+}
+
+/**
  * Page that show's if the mission was a success or not, if
  * a success then all rover's end positions are displayed. If
  * a mission fails then an error or warning message is shown
@@ -124,16 +182,16 @@ const askPlateauQuestions = async () => {
  */
 const endMission = (success: boolean, message?: string): void => {
   clear(false);
-  print("***************************************");
+  printLine("*", 40);
   if (success) {
-    print("Well done on a successful Mission! 🥳");
+    print("🥳 Well done on a successful Mission! 🥳");
   } else {
     print("Mission aborted! 😭");
   }
   if (message) {
     print(message);
   }
-  print("***************************************");
+  printLine("*", 40);
 
   askQuestion("Press ENTER to restart! ", welcomeMissionController);
 };

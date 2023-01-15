@@ -1,5 +1,9 @@
 import * as readline from "node:readline";
+import { CompassPoint } from "./src/marsMission.types";
 
+/**
+ * Creates input reader
+ */
 const reader = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -44,6 +48,17 @@ export const printLine = (value: string, repeatNumber: number): void => {
   }
   print(line);
 };
+
+/**
+ * Print header value
+ * 
+ * @param header - header message
+ */
+export const printHeader = (header: string): void => {
+  printLine("-", header.length);
+  print(header);
+  printLine("-", header.length);
+}
 
 /**********************************************************************
  * 
@@ -111,5 +126,32 @@ export const validateIsNumber = ((value: number) : boolean => {
     isValid = false;
     print(`⛔ Value must be a number, please try again.`, false);
   }  
+  return isValid;
+});
+
+/**
+ * Validates that a response is a valid compass value
+ * @param value - user response
+ * @returns - true if valid else false
+ */
+export const validateIsCompassPoint = ((value: CompassPoint) : boolean => {
+  let isValid = "NESW".includes(value);
+  if (isValid === false) {
+    print(`⛔ Value must be a compass point (N, E, S or W), please try again.`, false);
+  }
+  return isValid;
+})
+
+/**
+ * Validates that a response is a valid rover command
+ * @param value - user response
+ * @returns - true if valid else false
+ */
+export const validateRoverInstructions = ((value: string) : boolean => {
+  let isValid = value.split("").reduce(
+    (previous, current) => previous === true || "LMR".includes(current), false);
+  if (isValid === false) {
+    print(`⛔ Each rover instruction must be L, M or R. please try again.`, false);
+  }
   return isValid;
 });
