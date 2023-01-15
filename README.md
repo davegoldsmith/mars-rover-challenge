@@ -52,10 +52,58 @@ I initially started with a TDD approach based on the design above and created te
 ### Console Input
 
 After completing the initial design I implemented a way of running the Mars Mission from the command line. I split the reponsibilities into the following:
-- `index.ts` - contains the 
-- `console.ts` - handles the execution of printing to and inputting from the console
-- `validation.ts` - validation handling helper functions
+- `index.ts` - contains the logic for navigating the application
+- `console.ts` - handles the execution of printing to and inputting from the console, as well as validation of inputs
 
 #### Running the Mars Mission
+
+##### Start screen
+
+![Welcome to Mission Control](./images/start.jpg)
+
+Enter your name to enter mission control. If You don't you can't rover!
+
+![Welcome to Mission Control](./images/no-name-abort.jpg)
+
+##### Mission choices
+
+![Welcome to Mission Control](./images/mission-choices.jpg)
+
+Enter 1 to add mission parameters manually.
+Enter 2 to add mission parameters from a file.
+
+##### Enter parameters manually
+
+First Enter the plateau details
+
+![Welcome to Mission Control](./images/plateau.jpg)
+
+Next add the details for each Rover on the mission.
+
+![Welcome to Mission Control](./images/rover.jpg)
+
+If you type invalid responses then a warning is shown and the question is asked again.
+
+##### Enter mission from file
+
+Type in a valid file that contains valid mission commands.
+
+![Welcome to Mission Control](./images/file-mission.jpg)
+
+##### Successful Mission! 
+
+The final destinations for each Rover is displayed
+
+![Welcome to Mission Control](./images/success.jpg)
+
+##### Unsuccessful Mission
+
+If an error occurs during the mission then the mission aborts and an error is shown.
+
+![Welcome to Mission Control](./images/error-abort.jpg)
+
+If reading from an invalid file or contents is invalid then the mission is aborted.
+
+![Welcome to Mission Control](./images/bad-file-abort.jpg)
 
 
