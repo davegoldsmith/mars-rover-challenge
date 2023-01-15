@@ -16,6 +16,7 @@ The design was based on the following assumptions:
 - Each Rover will fulfil its whole set of instructions before any subsequent Rovers start their instructions.
 - A Rover cannot move to a point that is occupied by another rover and if a move would result in this then an error is thrown.
 - A Rover cannot move outside the boundaries of the plateau.
+- A Rover's start coordinates must be in the boundaries of the plateau.
 
 ### The Design
 
@@ -41,6 +42,7 @@ This is where the inputs for the Mars Mission are processed and validated and th
 - returns the finishing coordinates and orientation for the given rovers
 
 Therefore one of the following outcomes will occur:
+- Error if a Rover's starting coordinates are not in the plateau's boundaries
 - Error if plateau parameters are invalid
 - Error if a rover would collide with another rover or fall off the plateau
 - Success when the mission runs smoothly

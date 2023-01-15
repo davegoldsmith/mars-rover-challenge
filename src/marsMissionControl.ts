@@ -20,6 +20,11 @@ export const launchMission = (missionCommands: MissionCommands): Array<Direction
   const results = new Array<DirectionCoordinates>();
   validatePlateau(missionCommands.plateau);
   missionCommands.roverInstructionsArray.forEach((roverInstruction) => {
+    if (isInPlateauBoundaries(roverInstruction.startCoordinates.coordinates, missionCommands.plateau) !== true) {
+      throw new Error(
+        `Error: Rover starting coordinates x=${roverInstruction.startCoordinates.coordinates.x}, y=${roverInstruction.startCoordinates.coordinates.y} are outside the Plateau's boundary.`
+      );
+    }
     const rover = createRover(
       roverInstruction.startCoordinates.coordinates,
       roverInstruction.startCoordinates.facing
@@ -35,11 +40,11 @@ export const launchMission = (missionCommands: MissionCommands): Array<Direction
         const nextDestination = rover.getNextDestination();
         if (isInPlateauBoundaries(nextDestination, missionCommands.plateau) !== true) {
           throw new Error(
-            `Error: Coordinates x=${nextDestination.x}, y=${nextDestination.y} is outside the Plateau's boundary.`
+            `Error: Cannot move as coordinates x=${nextDestination.x}, y=${nextDestination.y} are outside the Plateau's boundary.`
           );
         } else if (rovers.find(otherRover => otherRover.id !== rover.id && otherRover.coordinates.x === nextDestination.x && otherRover.coordinates.y === nextDestination.y)) {
           throw new Error(
-            `Error: Coordinates x=${nextDestination.x}, y=${nextDestination.y} is blocked by another rover.`
+            `Error: Cannot move as coordinates x=${nextDestination.x}, y=${nextDestination.y} is blocked by another rover.`
           );
         } else {
           rover.move();

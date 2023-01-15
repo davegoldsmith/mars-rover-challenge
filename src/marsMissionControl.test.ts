@@ -60,7 +60,7 @@ describe("Test plateau boundary error situations", () => {
   test("Error when Destination y coordinate less than 0", () => {
     const mission1 = {plateau: marsPlateau, roverInstructionsArray: roverInstructions};
     expect(() => launchMission(mission1)).toThrowError(
-      "Error: Coordinates x=1, y=-1 is outside the Plateau's boundary."
+      "Error: Cannot move as coordinates x=1, y=-1 are outside the Plateau's boundary."
     );
   });  
   test("Error when Destination x coordinate less than 0", () => {
@@ -68,7 +68,7 @@ describe("Test plateau boundary error situations", () => {
     roverInstructions.push(xToLowRoverInstructions);
     const mission2 = {plateau: marsPlateau, roverInstructionsArray: roverInstructions};
     expect(() => launchMission(mission2)).toThrowError(
-      "Error: Coordinates x=-1, y=1 is outside the Plateau's boundary."
+      "Error: Cannot move as coordinates x=-1, y=1 are outside the Plateau's boundary."
     );
   });  
   test("Error when Destination y coordinate greater than 5 (max boundary)", () => {
@@ -76,7 +76,7 @@ describe("Test plateau boundary error situations", () => {
     roverInstructions.push(yToHighRoverInstructions);
     const mission3 = {plateau: marsPlateau, roverInstructionsArray: roverInstructions};
     expect(() => launchMission(mission3)).toThrowError(
-      "Error: Coordinates x=1, y=6 is outside the Plateau's boundary."
+      "Error: Cannot move as coordinates x=1, y=6 are outside the Plateau's boundary."
     );
   });  
   test("Error when Destination x coordinate greater than 5 (max boundary)", () => {
@@ -84,7 +84,21 @@ describe("Test plateau boundary error situations", () => {
     roverInstructions.push(xToHighRoverInstructions);
     const mission4 = {plateau: marsPlateau, roverInstructionsArray: roverInstructions};
     expect(() => launchMission(mission4)).toThrowError(
-      "Error: Coordinates x=6, y=1 is outside the Plateau's boundary."
+      "Error: Cannot move as coordinates x=6, y=1 are outside the Plateau's boundary."
+    );
+  }); 
+
+  test("Error when Rover's initial position x coordinate greater than 5 (max boundary)", () => {
+    const startOutsideRoverInstructions = {
+      startCoordinates: { coordinates: { x: 6, y: 5 }, facing: "N" },
+      instructions: "MM",
+    } as RoverInstructions; 
+    
+    roverInstructions = [];
+    roverInstructions.push(startOutsideRoverInstructions);
+    const mission5 = {plateau: marsPlateau, roverInstructionsArray: roverInstructions};
+    expect(() => launchMission(mission5)).toThrowError(
+      "Error: Rover starting coordinates x=6, y=5 are outside the Plateau's boundary."
     );
   }); 
 
@@ -107,7 +121,7 @@ describe("Test collision situations", () => {
   test("Tests that a rover2 is blocked by rover1", () => {
     const mission1 = {plateau: marsPlateau, roverInstructionsArray: roverInstructions};
     expect(() => launchMission(mission1)).toThrowError(
-      "Error: Coordinates x=2, y=2 is blocked by another rover."
+      "Error: Cannot move as coordinates x=2, y=2 is blocked by another rover."
     );
   });   
 
